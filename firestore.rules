@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global safety net catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Users collection:
+    // Users can read and update their own profile
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isValidId(userId);
+    }
+
+    // Applications collection:
+    // Anyone can create an online application or lookup their own reference
+    match /applications/{applicationId} {
+      allow get, list: if true;
+      allow create: if isValidId(applicationId) &&
+        request.resource.data.applicantName is string &&
+        request.resource.data.applicantName.size() <= 150 &&
+        request.resource.data.applicantPhone is string &&
+        request.resource.data.totalFee is number;
+      allow update: if isValidId(applicationId);
+    }
+
+    // Appointments collection:
+    // Anyone can book an appointment and view counter tokens
+    match /appointments/{appointmentId} {
+      allow get, list: if true;
+      allow create: if isValidId(appointmentId) &&
+        request.resource.data.applicantName is string &&
+        request.resource.data.applicantPhone is string;
+      allow update: if isValidId(appointmentId);
+      allow delete: if isValidId(appointmentId);
+    }
+
+    // Settings collection (website configuration)
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isValidId(settingId);
+    }
+
+    // Services collection
+    match /services/{serviceId} {
+      allow read: if true;
+      allow write: if isValidId(serviceId);
+      allow delete: if isValidId(serviceId);
+    }
+
+    // Healthcheck / test document
+    match /test/connection {
+      allow read: if true;
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Cyber cafe online service application record",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique application tracking ID e.g. CYBER-2026-XXXX"
+        },
+        "serviceId": {
+          "type": "string",
+          "description": "ID of the applied cyber cafe service"
+        },
+        "serviceTitle": {
+          "type": "string",
+          "description": "Human readable service title"
+        },
+        "category": {
+          "type": "string",
+          "description": "Service category"
+        },
+        "applicantName": {
+          "type": "string",
+          "description": "Full name of the applicant"
+        },
+        "applicantPhone": {
+          "type": "string",
+          "description": "Contact phone or WhatsApp number"
+        },
+        "applicantEmail": {
+          "type": "string",
+          "description": "Applicant email address"
+        },
+        "applicantAddress": {
+          "type": "string",
+          "description": "Postal delivery address"
+        },
+        "deliveryMode": {
+          "type": "string",
+          "enum": ["digital", "pickup", "courier"],
+          "description": "Delivery preference"
+        },
+        "totalFee": {
+          "type": "number",
+          "description": "Total fee in INR"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Received", "Documents Verified", "In Progress", "Form Submitted", "Ready for Pickup", "Completed"],
+          "description": "Lifecycle state of the application"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last update timestamp"
+        },
+        "adminRemarks": {
+          "type": "string",
+          "description": "Notes from the cyber cafe operator"
+        },
+        "acknowledgmentNo": {
+          "type": "string",
+          "description": "Official government portal acknowledgment number"
+        }
+      },
+      "required": ["id", "serviceId", "serviceTitle", "applicantName", "applicantPhone", "status", "totalFee"]
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "In-person cyber cafe counter appointment token",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Appointment record ID"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Firebase user UID"
+        },
+        "tokenNumber": {
+          "type": "string",
+          "description": "Counter priority token e.g. TOKEN #E-14"
+        },
+        "applicantName": {
+          "type": "string",
+          "description": "Name of the visiting customer"
+        },
+        "applicantPhone": {
+          "type": "string",
+          "description": "Phone number"
+        },
+        "serviceTitle": {
+          "type": "string",
+          "description": "Service for which the slot was booked"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of appointment YYYY-MM-DD"
+        },
+        "timeSlot": {
+          "type": "string",
+          "description": "Time slot window"
+        },
+        "counterType": {
+          "type": "string",
+          "enum": ["Regular Desk", "Express Desk"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Confirmed", "Completed", "Cancelled"]
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      },
+      "required": ["id", "tokenNumber", "applicantName", "applicantPhone", "date", "timeSlot", "status"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Customer profile account record",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "lastLoginAt": {
+          "type": "string"
+        }
+      },
+      "required": ["uid", "name", "email"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Registered customer profile and identity records"
+    },
+    "/applications/{applicationId}": {
+      "schema": {
+        "$ref": "#/entities/Application"
+      },
+      "description": "Collection of all cyber cafe customer applications"
+    },
+    "/appointments/{appointmentId}": {
+      "schema": {
+        "$ref": "#/entities/Appointment"
+      },
+      "description": "Collection of booked counter appointment tokens"
+    },
+    "/settings/{settingId}": {
+      "schema": "WebsiteConfig",
+      "description": "Customizable website brand, hero, and rates configuration"
+    },
+    "/services/{serviceId}": {
+      "schema": "CyberService",
+      "description": "Customizable cyber cafe services catalog"
+    }
+  }
+}

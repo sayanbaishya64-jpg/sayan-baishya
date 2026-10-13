@@ -1,0 +1,8 @@
+{
+  "name": "CyberPoint Online Seva & Services",
+  "description": "Online Cyber Cafe Services portal: browse services and fees, apply online, book appointments, send documents, and track applications.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
